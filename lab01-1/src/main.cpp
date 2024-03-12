@@ -37,8 +37,13 @@ numeric_file_stats get_numeric_stats (FILE* source) {
     result.count_total = 0;
     result.count_positive = 0;
     result.count_negative = 0;
-    double number; 
-    while (fscanf(source, "%lf", &number) != EOF) {
+    double number = 0; 
+    while (true) { 
+        if (fscanf(source, "%lf", &number)<=0) {
+            fgetc(source);
+            if (feof(source)) break; 
+            continue;
+        }
         if (!any) {
             result.min = number;
             result.max = number;
@@ -176,7 +181,7 @@ void* handle_file (void* arg) {
     }
     else {
         pthread_mutex_lock(&shared_mutex); // to prevent stdout from scuffing
-        printf("Can not handle %s", type_and_filename);
+        printf("Can not handle %s\n", type_and_filename);
         pthread_mutex_unlock(&shared_mutex);
     }
     return NULL;
