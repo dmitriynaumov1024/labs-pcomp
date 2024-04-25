@@ -1,0 +1,14 @@
+#!/bin/bash
+
+rm -r out
+mkdir out
+
+while IFS= read -r line; do
+    # Extract the N value from the line
+    N=$(echo "$line" | cut -d':' -f1 | cut -d',' -f2 | cut -d']' -f1)
+    # Extract the text from the line
+    text=$(echo "$line" | cut -d':' -f2-)
+
+    # Append the text to the corresponding output file based on the N value
+    echo "$text" >> "out/$N.log"
+done
